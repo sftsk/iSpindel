@@ -163,34 +163,35 @@ String SenderClass::sendTCP(String server, uint16_t port)
 bool SenderClass::sendThingSpeak(String token, long Channel)
 {
     int field = 0;
-    unsigned long channelNumber = Channel; 
-    const char * writeAPIKey = token.c_str();
-    
+    unsigned long channelNumber = Channel;
+    const char *writeAPIKey = token.c_str();
+
     serializeJson(_doc, Serial);
     ThingSpeak.begin(_client);
 
     CONSOLELN(F("\nSender: ThingSpeak posting"));
-   
+
     for (const auto &kv : _doc.as<JsonObject>())
-    {   
-        field++;  
+    {
+        field++;
         ThingSpeak.setField(field, kv.value().as<String>());
     }
-    // write to the ThingSpeak channel 
+    // write to the ThingSpeak channel
     int x = ThingSpeak.writeFields(channelNumber, writeAPIKey);
 
-    if(x == 200){
-     Serial.println("Channel update successful.");
+    if (x == 200)
+    {
+        Serial.println("Channel update successful.");
     }
-    else{
-     Serial.println("Problem updating channel. HTTP error code " + String(x));
-     return false;
+    else
+    {
+        Serial.println("Problem updating channel. HTTP error code " + String(x));
+        return false;
     }
     _client.stop();
     stopclient();
     return true;
-    }
-
+}
 
 bool SenderClass::sendGenericPost(String server, String uri, uint16_t port)
 {
@@ -489,7 +490,7 @@ bool SenderClass::sendTCONTROL(String server, uint16_t port)
 
 bool SenderClass::sendBrewersfriend(String token, String name)
 {
-    _jsonVariant.printTo(Serial);
+    serializeJson(_doc, Serial);
 
     if (_client.connect(BREWERSFRIENDSERVER, 80))
     {
@@ -498,11 +499,11 @@ bool SenderClass::sendBrewersfriend(String token, String name)
         String msg = F("POST /ispindel/");
         msg += token;
         msg += F(" HTTP/1.1\r\nHost: log.brewersfriend.com\r\nUser-Agent: ESP8266\r\nConnection: close\r\nContent-Type: application/json\r\nContent-Length: ");
-        msg += _jsonVariant.measureLength();
+        msg += measureJson(_doc);
         msg += "\r\n";
 
         _client.println(msg);
-        _jsonVariant.printTo(_client);
+        serializeJson(_doc, _client);
         _client.println();
         CONSOLELN(msg);
     }
