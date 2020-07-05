@@ -20,7 +20,7 @@
 extern Ticker flasher;
 
 // defines go here
-#define FIRMWAREVERSION "6.2.0"
+#define FIRMWAREVERSION "6.3.1"
 
 #define API_FHEM true
 #define API_UBIDOTS true
@@ -31,6 +31,14 @@ extern Ticker flasher;
 #define API_MQTT true
 #define API_THINGSPEAK true
 #define API_BREWERSFRIEND true
+#define API_BLYNK true
+
+//#define BLYNK_DEBUG
+//#define APP_DEBUG
+//#define BLYNK_PRINT Serial
+#define BLYNK_NO_BUILTIN
+#define BLYNK_NO_FANCY_LOGO
+#define BLYNK_MAX_SENDBYTES 1200
 
 #ifndef DEBUG
 #define DEBUG true
@@ -87,7 +95,8 @@ extern Ticker flasher;
 #define DTPrometheus 9
 #define DTMQTT 10
 #define DTTHINGSPEAK 11
-#define DTBrewersFriend 12
+#define DTBLYNK 12
+#define DTBrewersFriend 13
 
 // Number of seconds after reset during which a
 // subseqent reset will be considered a double reset.
